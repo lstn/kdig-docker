@@ -1,8 +1,12 @@
 FROM debian:stretch-20190708 as kdig-builder
 
-RUN apt-get update -qq && apt-get install -y knot-dnsutils binutils
-RUN which kdig
-RUN readelf -d /usr/bin/kdig  | grep 'NEEDED'
+ENV KNOT_DNSUTILS_VERSION=2.7.6-2~bpo9+1
+
+RUN echo deb http://http.debian.net/debian stretch-backports main contrib non-free | \ 
+    tee /etc/apt/sources.list.d/stretch-backports.list && \
+    apt-get update -qq && apt-get install -y knot-dnsutils=$KNOT_DNSUTILS_VERSION
+
+#RUN readelf -d /usr/bin/kdig  | grep 'NEEDED'
 
 FROM gcr.io/distroless/base
 
@@ -25,6 +29,8 @@ COPY --from=kdig-builder ["/usr/lib/x86_64-linux-gnu/libgnutls*", \
          "/usr/lib/x86_64-linux-gnu/libhogweed*", \
          "/usr/lib/x86_64-linux-gnu/libgmp*", \
          "/usr/lib/x86_64-linux-gnu/libffi*", \
+         "/usr/lib/x86_64-linux-gnu/libfstrm*", \
+         "/usr/lib/x86_64-linux-gnu/libprotobuf-c*", \
          "/usr/lib/x86_64-linux-gnu/"]
 
 
