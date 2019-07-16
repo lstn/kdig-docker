@@ -1,6 +1,6 @@
 # kdig-docker
 
-Knot DNS dig command-line tool inside a distroless image.
+Knot DNS kdig command-line tool inside a distroless image.
 
 ## Running
 
